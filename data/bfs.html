@@ -1,0 +1,93 @@
+<div class="theory-section">
+    <h2>Поиск в ширину (BFS)</h2>
+    <p>Поиск в ширину (Breadth-First Search, BFS) — алгоритм обхода или поиска в структурах данных типа дерева или графа. В отличие от DFS, BFS исследует все вершины на текущей глубине перед переходом на следующий уровень.</p>
+    
+    <h3>Как работает BFS?</h3>
+    <p>Алгоритм BFS работает по следующему принципу:</p>
+    <ol>
+        <li>Начинаем с исходной вершины, добавляем её в очередь и помечаем как посещённую</li>
+        <li>Пока очередь не пуста:
+            <ul>
+                <li>Извлекаем вершину из очереди</li>
+                <li>Обрабатываем её</li>
+                <li>Добавляем все смежные непосещённые вершины в очередь и помечаем их как посещённые</li>
+            </ul>
+        </li>
+    </ol>
+    
+    <h3>Области применения</h3>
+    <ul>
+        <li>Поиск кратчайшего пути в невзвешенном графе</li>
+        <li>Поиск связных компонентов</li>
+        <li>Решение задач на лабиринты</li>
+        <li>Поиск всех вершин на заданном расстоянии</li>
+    </ul>
+    
+    <h3>Временная сложность</h3>
+    <p>Временная сложность алгоритма BFS составляет O(V + E), где V — количество вершин, E — количество рёбер в графе.</p>
+    
+    <div class="problems">
+        <h3>Задачи для практики</h3>
+        <ul>
+            <li><a href="https://leetcode.com/problems/rotting-oranges/" target="_blank">Rotting Oranges (LeetCode)</a></li>
+            <li><a href="https://cses.fi/problemset/task/1193" target="_blank">Labyrinth (CSES)</a></li>
+            <li><a href="https://acmp.ru/index.asp?main=task&id_task=276" target="_blank">Кратчайший путь в лабиринте (ACMP)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="visualization-section">
+    <h2>Визуализация поиска в ширину (BFS)</h2>
+    <p>Ниже представлена GIF-анимация, демонстрирующая процесс обхода графа с использованием алгоритма BFS:</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif" alt="Визуализация BFS">
+    <p>На анимации видно, как алгоритм равномерно распространяется от начальной вершины, посещая все соседние вершины перед переходом на следующий уровень.</p>
+</div>
+
+<div class="code-section">
+    <h2>Реализация BFS на C++</h2>
+    <p>Ниже представлена реализация алгоритма поиска в ширину на C++ с использованием очереди:</p>
+    <pre><code>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;queue>
+using namespace std;
+
+void BFS(vector&lt;vector&lt;int>>& graph, int start) {
+    int n = graph.size();
+    vector&lt;bool> visited(n, false);
+    queue&lt;int> q;
+    
+    visited[start] = true;
+    q.push(start);
+    
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        cout << v << " ";
+        
+        for (int u : graph[v]) {
+            if (!visited[u]) {
+                visited[u] = true;
+                q.push(u);
+            }
+        }
+    }
+}
+
+int main() {
+    vector&lt;vector&lt;int>> graph = {
+        {1, 2},
+        {0, 3, 4},
+        {0, 4},
+        {1, 5},
+        {1, 2},
+        {3}
+    };
+    
+    cout << "Результат обхода BFS, начиная с вершины 0:" << endl;
+    BFS(graph, 0);
+    
+    return 0;
+}</code></pre>
+    <h3>Пояснение к коду</h3>
+    <p>Данный код реализует алгоритм поиска в ширину с использованием очереди. Граф представлен в виде списка смежности. Алгоритм начинает с начальной вершины, посещает все соседние вершины, затем переходит к соседям соседей и так далее.</p>
+</div>
