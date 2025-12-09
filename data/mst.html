@@ -1,0 +1,121 @@
+<div class="theory-section">
+    <h2>Минимальное остовное дерево (MST)</h2>
+    <p>Минимальное остовное дерево (Minimum Spanning Tree, MST) — подграф связного взвешенного графа, который является деревом, содержит все вершины исходного графа и имеет минимально возможный суммарный вес рёбер.</p>
+    
+    <h3>Алгоритмы построения MST</h3>
+    <p>Существует два основных алгоритма для построения минимального остовного дерева:</p>
+    <ol>
+        <li><strong>Алgoritm Крускала</strong> — сортирует все рёбра по весу и добавляет их в дерево, если они не образуют цикл</li>
+        <li><strong>Алгоритм Прима</strong> — начинает с произвольной вершины и на каждом шаге добавляет ребро минимального веса, соединяющее дерево с новой вершиной</li>
+    </ol>
+    
+    <h3>Области применения</h3>
+    <ul>
+        <li>Проектирование сетей (компьютерных, транспортных, коммуникационных)</li>
+        <li>Кластеризация данных</li>
+        <li>Приближённые алгоритмы для задачи коммивояжёра</li>
+    </ul>
+    
+    <h3>Временная сложность</h3>
+    <ul>
+        <li>Алгоритм Крускала: O(E log E) или O(E log V)</li>
+        <li>Алгоритм Прима: O(E log V) при использовании кучи</li>
+    </ul>
+    
+    <div class="problems">
+        <h3>Задачи для практики</h3>
+        <ul>
+            <li><a href="https://leetcode.com/problems/min-cost-to-connect-all-points/" target="_blank">Min Cost to Connect All Points (LeetCode)</a></li>
+            <li><a href="https://cses.fi/problemset/task/1675" target="_blank">Road Reparation (CSES)</a></li>
+            <li><a href="https://acmp.ru/index.asp?main=task&id_task=20" target="_blank">Максимальное остовное дерево (ACMP)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="visualization-section">
+    <h2>Визуализация минимального остовного дерева</h2>
+    <p>Ниже представлено изображение минимального остовного дерева:</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Minimum_spanning_tree.svg/1200px-Minimum_spanning_tree.svg.png" alt="Минимальное остовное дерево" width="400">
+    <p>На изображении показан граф (серые линии) и его минимальное остовное дерево (красные линии).</p>
+</div>
+
+<div class="code-section">
+    <h2>Реализация алгоритма Крускала на C++</h2>
+    <p>Ниже представлена реализация алгоритма Крускала для нахождения минимального остовного дерева:</p>
+    <pre><code>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;algorithm>
+using namespace std;
+
+struct Edge {
+    int u, v, weight;
+    bool operator<(Edge const& other) {
+        return weight < other.weight;
+    }
+};
+
+vector&lt;int> parent, rank;
+
+void make_set(int v) {
+    parent[v] = v;
+    rank[v] = 0;
+}
+
+int find_set(int v) {
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+
+void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b) {
+        if (rank[a] < rank[b])
+            swap(a, b);
+        parent[b] = a;
+        if (rank[a] == rank[b])
+            rank[a]++;
+    }
+}
+
+int main() {
+    int n = 5; // Количество вершин
+    vector&lt;Edge> edges = {
+        {0, 1, 2},
+        {0, 3, 6},
+        {1, 2, 3},
+        {1, 3, 8},
+        {1, 4, 5},
+        {2, 4, 7},
+        {3, 4, 9}
+    };
+    
+    parent.resize(n);
+    rank.resize(n);
+    for (int i = 0; i < n; i++)
+        make_set(i);
+    
+    sort(edges.begin(), edges.end());
+    
+    int cost = 0;
+    vector&lt;Edge> result;
+    for (Edge e : edges) {
+        if (find_set(e.u) != find_set(e.v)) {
+            cost += e.weight;
+            result.push_back(e);
+            union_sets(e.u, e.v);
+        }
+    }
+    
+    cout << "Вес минимального остовного дерева: " << cost << endl;
+    cout << "Рёбра в MST:" << endl;
+    for (Edge e : result) {
+        cout << e.u << " - " << e.v << " (вес: " << e.weight << ")" << endl;
+    }
+    
+    return 0;
+}</code></pre>
+    <h3>Пояснение к коду</h3>
+    <p>Данный код реализует алгоритм Крускала для нахождения минимального остовного дерева. Алгоритм использует систему непересекающихся множеств для эффективной проверки циклов. Рёбра сортируются по весу, и затем добавляются в дерево, если они не образуют цикл.</p>
+</div>
