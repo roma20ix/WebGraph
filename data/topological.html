@@ -1,0 +1,115 @@
+<div class="theory-section">
+    <h2>Топологическая сортировка</h2>
+    <p>Топологическая сортировка — упорядочивание вершин ориентированного графа такое, что для любого ребра (u, v) вершина u идет перед вершиной v в этом упорядочивании. Применяется только к ориентированным ациклическим графам (DAG).</p>
+    
+    <h3>Алгоритмы топологической сортировки</h3>
+    <p>Существует два основных алгоритма топологической сортировки:</p>
+    <ol>
+        <li><strong>Алгоритм Кана</strong> — использует поиск в ширину и основан на подсчёте входящих степеней вершин</li>
+        <li><strong>Алгоритм на основе DFS</strong> — использует поиск в глубину и добавляет вершины в список после обработка всех потомков</li>
+    </ol>
+    
+    <h3>Области применения</h3>
+    <ul>
+        <li>Определение порядка выполнения задач с зависимостями</li>
+        <li>Планирование учебных курсов с prerequisites</li>
+        <li>Определение порядка компиляции модулей</li>
+    </ul>
+    
+    <h3>Временная сложность</h3>
+    <p>Временная сложность алгоритмов топологической сортировки составляет O(V + E), где V — количество вершин, E — количество рёбер.</p>
+    
+    <div class="problems">
+        <h3>Задачи для практики</h3>
+        <ul>
+            <li><a href="https://leetcode.com/problems/course-schedule/" target="_blank">Course Schedule (LeetCode)</a></li>
+            <li><a href="https://cses.fi/problemset/task/1679" target="_blank">Course Schedule (CSES)</a></li>
+            <li><a href="https://acmp.ru/index.asp?main=task&id_task=118" target="_blank">Топологическая сортировка (ACMP)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="visualization-section">
+    <h2>Визуализация топологической сортировки</h2>
+    <p>Ниже представлено изображение ориентированного ациклического графа и его топологической сортировки:</p>
+    <img src="https://upload.wikimedia.org/wikipedia//commons/thumb/0/06/Directed_acyclic_graph_2.svg/1200px-Directed_acyclic_graph_2.svg.png" alt="Топологическая сортировка" width="400">
+    <p>На изображении показан DAG и один из возможных топологических порядков: 5, 7, 3, 11, 8, 2, 9, 10.</p>
+</div>
+
+<div class="code-section">
+    <h2>Реализация топологической сортировки на C++</h2>
+    <p>Ниже представлена реализация топологической сортировки с использованием алгоритма Кана:</p>
+    <pre><code>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;queue>
+using namespace std;
+
+vector&lt;int> topologicalSort(vector&lt;vector&lt;int>>& graph) {
+    int n = graph.size();
+    vector&lt;int> in_degree(n, 0);
+    vector&lt;int> result;
+    
+    // Подсчёт входящих степеней
+    for (int u = 0; u < n; u++) {
+        for (int v : graph[u]) {
+            in_degree[v]++;
+        }
+    }
+    
+    queue&lt;int> q;
+    for (int i = 0; i < n; i++) {
+        if (in_degree[i] == 0) {
+            q.push(i);
+        }
+    }
+    
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        result.push_back(u);
+        
+        for (int v : graph[u]) {
+            in_degree[v]--;
+            if (in_degree[v] == 0) {
+                q.push(v);
+            }
+        }
+    }
+    
+    if (result.size() != n) {
+        // Граф содержит цикл, топологическая сортировка невозможна
+        return vector&lt;int>();
+    }
+    
+    return result;
+}
+
+int main() {
+    int n = 6;
+    vector&lt;vector&lt;int>> graph(n);
+    
+    // Добавляем рёбра
+    graph[5].push_back(2);
+    graph[5].push_back(0);
+    graph[4].push_back(0);
+    graph[4].push_back(1);
+    graph[2].push_back(3);
+    graph[3].push_back(1);
+    
+    vector&lt;int> order = topologicalSort(graph);
+    
+    if (order.empty()) {
+        cout << "Граф содержит цикл, топологическая сортировка невозможна" << endl;
+    } else {
+        cout << "Топологический порядок вершин:" << endl;
+        for (int v : order) {
+            cout << v << " ";
+        }
+        cout << endl;
+    }
+    
+    return 0;
+}</code></pre>
+    <h3>Пояснение к коду</h3>
+    <p>Данный код реализует алгоритм Кана для топологической сортировки. Алгоритм работает следующим образом: находит вершины с нулевой входящей степенью, добавляет их в результат, и уменьшает входящие степени всех смежных вершин. Процесс повторяется до тех пор, пока все вершины не будут обработаны.</p>
+</div>
