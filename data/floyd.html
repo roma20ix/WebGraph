@@ -1,0 +1,98 @@
+<div class="theory-section">
+    <h2>Алгоритм Флойда-Уоршелла</h2>
+    <p>Алгоритм Флойда-Уоршелла — алгоритм нахождения кратчайших путей между всеми парами вершин во взвешенном графе. Работает как с положительными, так и с отрицательными весами рёбер (но без отрицательных циклов).</p>
+    
+    <h3>Как работает алгоритм Флойда?</h3>
+    <p>Алгоритм использует динамическое программирование и работает по следующему принципу:</p>
+    <ol>
+        <li>Создаём матрицу расстояний размером V×V</li>
+        <li>Инициализируем матрицу весами рёбер или бесконечностью</li>
+        <li>Для каждой промежуточной вершины k:
+            <ul>
+                <li>Для каждой пары вершин i и j:</li>
+                <li>Если расстояние через k короче, обновляем матрицу</li>
+            </ul>
+        </li>
+    </ol>
+    
+    <h3>Области применения</h3>
+    <ul>
+        <li>Поиск кратчайших путей между всеми парами вершин</li>
+        <li>Обнаружение отрицательных циклов</li>
+        <li>Транзитивное замыкание графов</li>
+    </ul>
+    
+    <h3>Временная сложность</h3>
+    <p>Временная сложность алгоритма Флойда составляет O(V³), где V — количество вершин в графе.</p>
+    
+    <div class="problems">
+        <h3>Задачи для практики</h3>
+        <ul>
+            <li><a href="https://cses.fi/problemset/task/1672" target="_blank">Shortest Routes II (CSES)</a></li>
+            <li><a href="https://acmp.ru/index.asp?main=task&id_task=134" target="_blank">Флойд (ACMP)</a></li>
+            <li><a href="https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/" target="_blank">Find the City (LeetCode)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="visualization-section">
+    <h2>Визуализация алгоритма Флойда</h2>
+    <p>Ниже представлена GIF-анимация, демонстрирующая работу алгоритма Флойда:</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Floyd-Warshall_Algorithm_example.gif" alt="Визуализация Флойда">
+    <p>На анимации видно, как алгоритм постепенно улучшает оценки кратчайших путей, рассматривая каждую вершину в качестве промежуточной.</p>
+</div>
+
+<div class="code-section">
+    <h2>Реализация алгоритма Флойда на C++</h2>
+    <p>Ниже представлена реализация алгоритма Флойда-Уоршелла на C++:</p>
+    <pre><code>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;climits>
+using namespace std;
+
+const int INF = 1e9;
+
+void floydWarshall(vector&lt;vector&lt;int>>& graph) {
+    int n = graph.size();
+    vector&lt;vector&lt;int>> dist = graph;
+    
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][k] < INF && dist[k][j] < INF) {
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+    
+    // Вывод результатов
+    cout << "Кратчайшие расстояния между всеми парами вершин:" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dist[i][j] == INF) {
+                cout << "INF ";
+            } else {
+                cout << dist[i][j] << " ";
+            }
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int n = 4;
+    vector&lt;vector&lt;int>> graph = {
+        {0, 5, INF, 10},
+        {INF, 0, 3, INF},
+        {INF, INF, 0, 1},
+        {INF, INF, INF, 0}
+    };
+    
+    floydWarshall(graph);
+    
+    return 0;
+}</code></pre>
+    <h3>Пояснение к коду</h3>
+    <p>Данный код реализует алгоритм Флойда-Уоршелла для нахождения кратчайших путей между всеми парами вершин. Граф представлен в виде матрицы смежности, где INF обозначает бесконечность (отсутствие прямого пути).</p>
+</div>
