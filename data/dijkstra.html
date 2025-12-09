@@ -1,0 +1,116 @@
+<div class="theory-section">
+    <h2>Алгоритм Дейкстры</h2>
+    <p>Алгоритм Дейкстры находит кратчайшие пути от одной вершины графа до всех остальных. Он работает только для графов с неотрицательными весами рёбер.</p>
+    
+    <h3>Как работает алгоритм Дейкстры?</h3>
+    <p>Алгоритм работает по следующему принципу:</p>
+    <ol>
+        <li>Инициализируем расстояния до всех вершин как бесконечность, кроме начальной вершины (расстояние 0)</li>
+        <li>Создаём множество необработанных вершин</li>
+        <li>Пока множество не пусто:
+            <ul>
+                <li>Выбираем вершину с наименьшим расстоянием</li>
+                <li>Обновляем расстояния до всех её соседей</li>
+                <li>Удаляем вершину из множества</li>
+            </ul>
+        </li>
+    </ol>
+    
+    <h3>Области применения</h3>
+    <ul>
+        <li>Поиск кратчайшего пути в графах с неотрицательными весами</li>
+        <li>Маршрутизация в сетях</li>
+        <li>Геоинформационные системы</li>
+    </ul>
+    
+    <h3>Временная сложность</h3>
+    <p>Временная сложность алгоритма Дейкстры зависит от реализации:
+    <ul>
+        <li>O(V²) при использовании массива</li>
+        <li>O(E + V log V) при использовании очереди с приоритетом</li>
+    </ul>
+    </p>
+    
+    <div class="problems">
+        <h3>Задачи для практики</h3>
+        <ul>
+            <li><a href="https://leetcode.com/problems/network-delay-time/" target="_blank">Network Delay Time (LeetCode)</a></li>
+            <li><a href="https://cses.fi/problemset/task/1671" target="_blank">Shortest Routes I (CSES)</a></li>
+            <li><a href="https://acmp.ru/index.asp?main=task&id_task=132" target="_blank">Кратчайший путь (ACMP)</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="visualization-section">
+    <h2>Визуализация алгоритма Дейкстры</h2>
+    <p>Ниже представлена GIF-анимация, демонстрирующая работу алгоритма Дейкстры:</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Dijkstra_Animation.gif" alt="Визуализация Дейкстры">
+    <p>На анимации видно, как алгоритм постепенно находит кратчайшие пути от начальной вершины до всех остальных.</p>
+</div>
+
+<div class="code-section">
+    <h2>Реализация алгоритма Дейкстры на C++</h2>
+    <p>Ниже представлена реализация алгоритма Дейкстры с использованием очереди с приоритетом:</p>
+    <pre><code>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;queue>
+#include &lt;climits>
+using namespace std;
+
+typedef pair&lt;int, int> pii;
+
+void dijkstra(vector&lt;vector&lt;pii>>& graph, int start) {
+    int n = graph.size();
+    vector&lt;int> dist(n, INT_MAX);
+    priority_queue&lt;pii, vector&lt;pii>, greater&lt;pii>> pq;
+    
+    dist[start] = 0;
+    pq.push({0, start});
+    
+    while (!pq.empty()) {
+        int u = pq.top().second;
+        int d = pq.top().first;
+        pq.pop();
+        
+        if (d != dist[u]) continue;
+        
+        for (auto& edge : graph[u]) {
+            int v = edge.first;
+            int weight = edge.second;
+            
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+    
+    cout << "Расстояния от вершины " << start << ":" << endl;
+    for (int i = 0; i < n; i++) {
+        cout << "Вершина " << i << ": " << dist[i] << endl;
+    }
+}
+
+int main() {
+    int n = 5; // Количество вершин
+    vector&lt;vector&lt;pii>> graph(n);
+    
+    // Добавляем рёбра
+    graph[0].push_back({1, 10});
+    graph[0].push_back({4, 5});
+    graph[1].push_back({2, 1});
+    graph[1].push_back({4, 2});
+    graph[2].push_back({3, 4});
+    graph[3].push_back({2, 6});
+    graph[3].push_back({0, 7});
+    graph[4].push_back({1, 3});
+    graph[4].push_back({2, 9});
+    graph[4].push_back({3, 2});
+    
+    dijkstra(graph, 0);
+    
+    return 0;
+}</code></pre>
+    <h3>Пояснение к коду</h3>
+    <p>Данный код реализует алгоритм Дейкстры с использованием очереди с приоритетом для эффективного выбора вершины с минимальным расстоянием. Граф представлен в виде списка смежности, где каждая вершина содержит пары (смежная вершина, вес ребра).</p>
+</div>
